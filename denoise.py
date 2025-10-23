@@ -20,9 +20,8 @@ n_fft = 512
 hop_length = 256  # 帧移
 win_length = 512
 
-# 关键修复：使用满足COLA条件的窗函数
-# 对于50%重叠，汉宁窗满足完美重构条件
-window = np.hanning(win_length + 1)[:-1]  # 标准的汉宁窗
+# 使用满足COLA条件的窗函数，50%重叠汉宁窗满足重构条件
+window = np.hanning(win_length + 1)[:-1] 
 
 # 验证COLA条件
 overlap_ratio = (win_length - hop_length) / win_length
@@ -73,7 +72,7 @@ def denoise_audio(input_audio):
     
     stft_input = np.stack([stft.real, stft.imag], axis=-1)[np.newaxis, ...]
     
-    # 4. 模型推理（暂时注释）
+    # 4. 模型推理
     output, conv_cache, tra_cache, inter_cache = session.run(
         [], 
         {
@@ -145,4 +144,5 @@ if __name__ == "__main__":
         if audiobyte:
             sf.write("enhanced_output.wav", np.concatenate(audiobyte), sr)
     except Exception as e:
+
         print(f"错误: {e}")
